@@ -39,6 +39,45 @@ class AddConfigParameters(CBPiExtension):
             except:
                 logging.warning('Unable to update database')
 
+parameters([Property.Sensor(label="Sensor"),
+            Property.Number(label="Target", configurable=True, description="Value to trigger next step"),
+            Property.Number(label="TimeOut", description="TimeOut for trigger next step", configurable=True)])
+class CP_WaitSensorStep(CBPiStep):
+
+    async def NextStep(self, **kwargs):
+        await self.next()
+
+    async def on_timer_done(self,timer):
+        self.summary = "MashIn Temp reached. Please add Malt Pipe."
+        await self.push_update()
+        self.cbpi.notify(self.name, 'MashIn Temp reached. Please add malt pipe and malt. Move to next step', action=[NotificationAction("Next Step", self.NextStep)])
+
+    async def on_timer_update(self,timer, seconds):
+        await self.push_update()
+
+    async def on_start(self):
+        self.port = str(self.cbpi.static_config.get('port',8000))
+        await self.push_update()
+
+    async def on_stop(self):
+        await self.timer.stop()
+        self.summary = ""
+        await self.push_update()
+
+    async def run(self):
+        while self.running == True:
+           await asyncio.sleep(1)
+           sensor_value = self.get_sensor_value(self.props.get("Sensor", None)).get("value")
+           if sensor_value >= int(self.props.get("Target",0)) and self.timer.is_running is not True:
+               self.timer.start()
+               self.timer.is_running = True
+        await self.push_update()
+        return StepResult.DONE
+
+    async def reset(self):
+        self.timer = Timer(1 ,on_update=self.on_timer_update, on_done=self.on_timer_done)
+
+
 @parameters([Property.Number(label="Temp", configurable=True),
              Property.Sensor(label="Sensor"),
              Property.Kettle(label="Kettle"),
@@ -617,7 +656,7 @@ class CP_BoilStep(CBPiStep):
             logging.error("Failed to switch on KettleLogic {} {}".format(self.kettle.id, e))
 
 @parameters([Property.Number(label="Timer", description="Time (Default: Minutes)", configurable=True),
-    Property.Select(label="TimeUnit",options=["Min","Sec"], description="Specify timer units (Empty: Min)"),
+            Property.Select(label="TimeUnit",options=["Min","Sec"], description="Specify timer units (Empty: Min)"),
             Property.Actor(label="Actor")])
 class CP_ActorStep(CBPiStep):
     async def on_timer_done(self, timer):
