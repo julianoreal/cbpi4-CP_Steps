@@ -39,12 +39,10 @@ class AddConfigParameters(CBPiExtension):
             except:
                 logging.warning('Unable to update database')
 
-
 @parameters([Property.Number(label="Temp", configurable=True),
              Property.Sensor(label="Sensor"),
              Property.Kettle(label="Kettle"),
              Property.Select(label="AutoMode",options=["Yes","No"], description="Switch Kettlelogic automatically on and off -> Yes")])
-
 class CP_SpargeStep(CBPiStep):
 
     async def NextStep(self, **kwargs):
@@ -108,7 +106,6 @@ class CP_SpargeStep(CBPiStep):
         except Exception as e:
             logging.error("Failed to switch on KettleLogic {} {}".format(self.kettle.id, e))
 
-
 @parameters([Property.Text(label="Notification",configurable = True, description = "Text for notification"),
              Property.Select(label="AutoNext",options=["Yes","No"], description="Automatically move to next step (Yes) or pause after Notification (No)")])
 class CP_SimpleStep(CBPiStep):
@@ -154,7 +151,6 @@ class CP_SimpleStep(CBPiStep):
              Property.Sensor(label="Sensor"),
              Property.Kettle(label="Kettle"),
              Property.Select(label="AutoMode",options=["Yes","No"], description="Switch Kettlelogic automatically on and off -> Yes")])
-
 class CP_MashInStep(CBPiStep):
 
     async def NextStep(self, **kwargs):
@@ -223,7 +219,6 @@ class CP_MashInStep(CBPiStep):
              Property.Sensor(label="Sensor"),
              Property.Kettle(label="Kettle"),
              Property.Select(label="AutoMode",options=["Yes","No"], description="Switch Kettlelogic automatically on and off -> Yes")])
-
 class CP_MashStep(CBPiStep):
 
     @action("Start Timer", [])
@@ -307,15 +302,12 @@ class CP_MashStep(CBPiStep):
         except Exception as e:
             logging.error("Failed to switch on KettleLogic {} {}".format(self.kettle.id, e))
 
-
 @parameters([Property.Number(label="Timer", description="Time in Minutes", configurable=True), 
              Property.Number(label="Temp", configurable=True),
              Property.Sensor(label="Sensor"),
              Property.Kettle(label="Kettle"),
              Property.Select(label="AutoMode",options=["Yes","No"], description="Switch Kettlelogic automatically on and off -> Yes")])
-
 class CP_MashOutStep(CBPiStep):
-
     @action("Start Timer", [])
     async def start_timer(self):
         if self.timer.is_running is not True:
@@ -388,7 +380,6 @@ class CP_MashOutStep(CBPiStep):
 
         except Exception as e:
             logging.error("Failed to switch on KettleLogic {} {}".format(self.kettle.id, e))
-
 
 @parameters([Property.Number(label="Temp", configurable=True, description="Target temperature for cooldown. Notification will be send when temp is reached and Actor can be triggered"),
              Property.Number(label="Interval", configurable=True, description="Interval [min] for Notification and caclulate predicted End time"),
@@ -676,8 +667,3 @@ def setup(cbpi):
     cbpi.plugin.register("CP_ActorStep", CP_ActorStep)
     cbpi.plugin.register("CP_SimpleStep", CP_SimpleStep)
     cbpi.plugin.register("INIT_StepConfigParameters", AddConfigParameters)
-   
-    
-    
-
-    
