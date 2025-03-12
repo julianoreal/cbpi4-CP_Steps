@@ -39,7 +39,7 @@ class AddConfigParameters(CBPiExtension):
             except:
                 logging.warning('Unable to update database')
 
-parameters([Property.Sensor(label="Sensor"),
+@parameters([Property.Sensor(label="Sensor"),
             Property.Number(label="Target", configurable=True, description="Value to trigger next step"),
             Property.Number(label="TimeOut", description="TimeOut for trigger next step", configurable=True)])
 class CP_WaitSensorStep(CBPiStep):
