@@ -705,4 +705,5 @@ def setup(cbpi):
     cbpi.plugin.register("CP_MashOutStep", CP_MashOutStep)
     cbpi.plugin.register("CP_ActorStep", CP_ActorStep)
     cbpi.plugin.register("CP_SimpleStep", CP_SimpleStep)
+    cbpi.plugin.register("CP_WaitSensorStep", CP_WaitSensorStep)
     cbpi.plugin.register("INIT_StepConfigParameters", AddConfigParameters)
